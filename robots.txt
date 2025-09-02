@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jdherrerac.github.io/space-ahead/sitemap-index.xml
