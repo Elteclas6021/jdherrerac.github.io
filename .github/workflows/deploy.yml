@@ -3,8 +3,6 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   deploy:
@@ -12,20 +10,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          # Esto asegura que se descarguen todos los archivos incluyendo package-lock.json
-          fetch-depth: 0
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'  # Habilita caching de npm
-          cache-dependency-path: package-lock.json  # Especifica el archivo de lock
+          # Remueve la configuración de cache si no quieres package-lock.json
       
       - name: Install dependencies
         run: |
-          npm ci  # Usa npm ci en lugar de npm install para builds confiables
+          npm install --no-package-lock  # Instala sin generar lock file
       
       - name: Build project
         run: npm run build
