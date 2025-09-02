@@ -10,27 +10,26 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Esto asegura que se descarguen todos los archivos incluyendo package-lock.json
+          fetch-depth: 0
       
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'npm'  # Habilita caching de npm
+          cache-dependency-path: package-lock.json  # Especifica el archivo de lock
       
-      # Agrega este paso para configurar pnpm
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.0.0  # ← Especifica la versión de pnpm
-          
       - name: Install dependencies
-        run: pnpm install  # ← Cambia npm por pnpm si usas pnpm
-        
-      - name: Build
-        run: pnpm run build  # ← Cambia npm por pnpm
-        
+        run: |
+          npm ci  # Usa npm ci en lugar de npm install para builds confiables
+      
+      - name: Build project
+        run: npm run build
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
